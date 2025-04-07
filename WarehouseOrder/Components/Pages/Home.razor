@@ -1,0 +1,117 @@
+﻿@page "/"
+@using WarehouseOrder;
+@using WarehouseOrder.Model;
+@using WarehouseOrder.Service;
+@inject ITransferOrder transferOrderService;
+@inject NavigationManager uriHelper;
+@using System.Threading;
+@inject IJSRuntime JSRuntime; 
+
+
+<PageTitle>Chumash</PageTitle>
+
+<head>
+    <link rel="stylesheet" href="wwwroot/app.css">
+        <script language="javascript">
+        setInterval(function(){
+           window.location.reload(1);
+        }, 180000);
+    </script>
+</head>
+
+<div class="top-row">
+<div id="scroll-container">
+    <h1 id="scroll-text">
+
+        <table class="table">
+            <tbody>
+
+                @if (transferOrders != null && transferOrders.Any())
+                {
+                    @foreach (var transferOrder in transferOrders)
+                    {
+                        <tr>
+                            <td style='width:7%'>@transferOrder.internalId</td>
+                            <td style='width:7%'>@transferOrder.tranDate</td>
+                            <td style='width:7%'>@transferOrder.type</td>
+                            <td style='width:7%'>@transferOrder.documentNumber</td>
+                            <td style='width:7%'>@transferOrder.status</td>
+                            <td style='width:7%'>@transferOrder.location</td>
+                            <td style='width:18%'>@transferOrder.transferLocation</td>
+                            <td style='width:12%'>@transferOrder.createdBy</td>
+                            <td style='width:28%'>@transferOrder.deliveryInstruction</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4">No Transfer Order in Waiting List!</td>
+                    </tr>
+                }
+             </tbody>
+        </table>    
+
+
+
+
+    </h1>
+</div>
+</div>
+
+
+@code {
+
+    // private static System.Timers.Timer _timer;
+    private List<erpTransferOrder> transferOrders = new();
+    private bool HasRendered = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TransferOrderService getTrans = new TransferOrderService(_dbt, _config);
+        transferOrders = await transferOrderService.GetTransferOrders();
+
+        bool firstRender = true;
+        // if (firstRender)
+        // {
+        //     var timer = await Task.Run(() => new Timer(new TimerCallback(_ =>
+        //     {
+        //         try
+        //         {
+        //             uriHelper.NavigateTo("/" );
+
+        //         }
+        //         catch (Exception ex) when (ex.GetType().Name == "JSDisconnectedException")
+        //         { }
+        //     }), null, 600000, 600000));
+
+        // }
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        // TransferOrderService getTrans = new TransferOrderService(_dbt, _config);
+        transferOrders = await transferOrderService.GetTransferOrders();
+
+        // bool firstRender = true;
+        // if (firstRender)
+        // {
+        //     var timer = await Task.Run(() => new Timer(new TimerCallback(_ =>
+        //     {
+        //         try
+        //         {
+        //             uriHelper.NavigateTo("/" );
+
+        //         }
+        //         catch (Exception ex) when (ex.GetType().Name == "JSDisconnectedException")
+        //         { }
+
+        //     }), null, 600000, 600000));
+        // }
+    }
+
+}
+
